@@ -1,0 +1,50 @@
+<project name="osCommon" default="dist" basedir=".">
+	<description>
+    simple example build file
+  </description>
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	<property name="build.bin" location="${build}/bin" />
+	<property name="dist" location="${build}/dist" />
+	<property name="THIRD_PARTY" location="/home/erik/development/library"/>
+
+	<property name="debug" location="true" />
+
+	<path id="base.path">
+		<pathelement path="${classpath}" />
+		<pathelement location="classes" />
+		
+		<fileset dir="${THIRD_PARTY}">
+			<include name="javax/javax.json-1.0.4.jar" />
+			<include name="org/eclipselink/eclipselink.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build.bin}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source">
+		<!-- Compile the java code from ${src} into ${build.bin} -->
+		<javac srcdir="${src}" destdir="${build.bin}" classpathref="base.path"
+			debug="${debug}"
+		/>
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/lib" />
+
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/lib/${ant.project.name}.jar" basedir="${build.bin}" />
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+	</target>
+</project>
